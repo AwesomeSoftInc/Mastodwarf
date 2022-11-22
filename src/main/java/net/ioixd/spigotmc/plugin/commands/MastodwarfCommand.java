@@ -1,5 +1,6 @@
 package net.ioixd.spigotmc.plugin.commands;
 
+import net.ioixd.spigotmc.plugin.commands.MastodwarfClient;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -15,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import org.bukkit.inventory.ItemStack;
@@ -27,6 +29,7 @@ public class MastodwarfCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
+
         ItemStack book = this.newBook("timeline");
         Player p = Bukkit.getServer().getPlayer(sender.getName());
 
@@ -59,6 +62,8 @@ public class MastodwarfCommand implements CommandExecutor {
     }
 
     public ItemStack newBook(String arg) {
+        String instance = MastodwarfClient.instance;
+
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
 
@@ -66,7 +71,7 @@ public class MastodwarfCommand implements CommandExecutor {
         meta.setAuthor("god");
 
         try {
-            URL url = new URL("https://wetdry.world/api/v1/timelines/public?local=true");
+            URL url = new URL(instance+"/api/v1/timelines/public?local=true");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             int response = conn.getResponseCode();
             String data;
