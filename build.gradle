@@ -14,7 +14,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.googlecode.json-simple:1.1.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT'
