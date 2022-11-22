@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.BookMeta;
 public class MastodwarfCommand implements CommandExecutor {
 
     Pattern html = Pattern.compile("<(.*?)>");
+    Pattern emote = Pattern.compile(":(.*?):");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
@@ -41,12 +42,20 @@ public class MastodwarfCommand implements CommandExecutor {
         long id;
         String content;
         Account account;
-
+        Media media;
     }
 
     class Account {
         String username;
         String display_name;
+    }
+
+    class Media {
+        Attachment[] attachments;
+    }
+
+    class Attachment {
+        String url;
     }
 
     public ItemStack newBook(String arg) {
@@ -70,39 +79,55 @@ public class MastodwarfCommand implements CommandExecutor {
             Gson gson = new Gson();
             Status[] statuses = gson.fromJson(data, Status[].class);
 
-            int advance = (ChatColor.BOLD.toString()+ChatColor.RESET.toString()+
-                    ChatColor.ITALIC.toString()+ChatColor.GRAY.toString()+
-                    ChatColor.RESET).length();
+            int advance = (ChatColor.ITALIC.toString()+ChatColor.GRAY.toString()+
+                    ChatColor.RESET+"\n\n").length();
 
-            int offset = 0;
             StringWriter writer = new StringWriter();
             for(int i = 0; i < statuses.length; i++) {
                 Status status = statuses[i];
 
-                if(status.content.compareTo("") != 0) {
-                    writer.write(ChatColor.BOLD+status.account.display_name+" "+ChatColor.RESET
-                            +ChatColor.ITALIC+ChatColor.GRAY+"(@"+status.account.username+"):"+ChatColor.RESET
-                            +"\n");
-                    offset += advance;
+                // for now, skip images with attachments in them.
+                // come back to this if i can get custom fonts working ever.
 
-                    String content = (status.content).replaceAll("</p>","\n");
-                    content = (content).replaceAll("<br>","\n");
+                if(status.media != null) {
+                    continue;
+                }
+
+                if(status.content.compareTo("") != 0) {
+                    String display_name = status.account.display_name;
+                    display_name = emote.matcher(display_name).replaceAll("");
+
+                    writer.write(
+                            // display name
+                            display_name + " "
+                            // username
+                            +ChatColor.ITALIC+ChatColor.GRAY+"(@"+status.account.username+"):"+ChatColor.RESET
+                            +"\n"
+                    );
+
+                    // post contents
+                    String content = (status.content);
+                    content = content.replaceAll("</p>","\n");
+                    content = content.replaceAll("<br>","\n");
+                    content = content.replaceAll("&#39;","\'");
+                    content = emote.matcher(content).replaceAll("");
                     content = html.matcher(content).replaceAll("");
 
-
-                    writer.write(content+"\n\n");
+                    writer.write(content);
                 }
 
                 StringBuffer buf = writer.getBuffer();
                 int len = buf.length();
-                final int MAX = 150;
+
+                final int MAX = 250;
+                String remaining = "";
                 if(len > MAX) {
-                    meta.addPage(buf.toString());
-                    String remaining = buf.substring(MAX-offset, len);
-                    buf.setLength(0);
-                    writer.write(remaining);
-                    offset = 0;
+                    remaining = buf.substring(MAX, len);
                 }
+
+                meta.addPage(buf.toString());
+                buf.setLength(0);
+                writer.write(remaining);
             }
             writer.close();
         } catch (Exception e) {
