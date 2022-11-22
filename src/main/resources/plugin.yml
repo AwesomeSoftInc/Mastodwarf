@@ -1,8 +1,8 @@
-name: TemplatePlugin
+name: MastodwarfClient
 version: 1.0
 api-version: 1.13
-main: de.joeakeem.spigotmc.plugin.template.TemplatePlugin
-
+main: net.ioixd.spigotmc.plugin.commands.MastodwarfClient
+depend: [ProtocolLib]
 commands:
-  enrich:
-    description: Makes you rich!
+  mastodwarf:
+    description: Open Mastodwarf
