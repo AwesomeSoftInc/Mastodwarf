@@ -1,0 +1,22 @@
+ plugins {
+     id 'java'
+     id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+     id 'com.github.johnrengelman.shadow' version '2.0.4'
+ }
+
+repositories {
+  maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+  maven {url = 'https://repo.dmulloy2.net/repository/public/'}
+  maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+  maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+  maven { url 'https://jitpack.io' }
+  mavenCentral()
+}
+
+dependencies {
+    implementation 'com.googlecode.json-simple:1.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT'
+    implementation "com.comphenix.protocol:ProtocolLib:4.7.0"
+}
