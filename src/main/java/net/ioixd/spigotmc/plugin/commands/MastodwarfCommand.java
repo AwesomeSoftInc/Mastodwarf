@@ -42,7 +42,6 @@ public class MastodwarfCommand implements CommandExecutor {
     }
 
     class Status{
-        long id;
         String content;
         Account account;
         Media media;

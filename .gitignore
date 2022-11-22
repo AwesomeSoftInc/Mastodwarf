@@ -9,3 +9,5 @@ out
 
 # Ignore Maven build output directory
 target
+
+.idea
